@@ -1,0 +1,92 @@
+# https://github.com/yuriyshyyan/k8s-nginx-manifest
+apiVersion: apps/v1
+kind: Deployment
+# Objective 1: Deployment Object Name hello-world
+metadata:
+  name: hello-world
+spec:
+  replicas: 1
+  # Objective 2: Labels - app: hello-world
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      # Objective 5: Should use the latest nginx:alpine
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        # Objective 4: Listen on 8080
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+      # Mount ConfigMap as a volume
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+---
+# Objective 3: Service Object to expose 30080 outside the cluster (LB) and 80 inside (NodePort/ClusterIP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-lb
+spec:
+  selector:
+    app: hello-world
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer # aweber.yuriys.net
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-clip
+spec:
+  selector:
+    app: hello-world
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-np
+spec:
+  selector:
+    app: hello-world
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+    nodePort: 30080
+  type: NodePort
+---
+# Objective 6: Define nginx.conf ConfigMap object
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+# Objective 4: Nginx should listen on 8080
+data:
+  nginx.conf: |
+    server {
+      listen 8080;
+      location / {
+        types {}
+        default_type text/plain;
+        add_header Content-Type text/plain;
+
+        return 200 "Hello Ryan! Hello, world!";
+      }
+    }
