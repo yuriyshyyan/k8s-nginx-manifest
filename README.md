@@ -2,6 +2,9 @@
 
 This repository is an assessment turn in for Ryan at AWeber
 
+The results can be located at COMMANDS.md as well as http://aweber.yuriys.net
+
+
 The properties of this assessment are as follows.\
 Write a Kubernetes manifest to deploy nginx. The configuration must meet the following requirements:
 
