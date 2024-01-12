@@ -2,8 +2,11 @@
 
 This repository is an assessment turn in for Ryan at AWeber
 
-The results can be located at COMMANDS.md as well as http://aweber.yuriys.net
+The finished results can be located at COMMANDS.md as well as http://aweber.yuriys.net
 
+A brand new kubernetes cluster was spun up with 1 master 1 worker.
+Default namespace was used for simplicity.
+K8s Cluster was spun up on an OpenStack Cloud (Similar to public clouds) using Magnum.
 
 The properties of this assessment are as follows.\
 Write a Kubernetes manifest to deploy nginx. The configuration must meet the following requirements:
